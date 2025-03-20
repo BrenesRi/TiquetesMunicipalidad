@@ -12,15 +12,21 @@ class Tiquete(models.Model):
     nombre = fields.Char("Título", required=True)
     description = fields.Text("Descripción", required=True)
 
-    create_user_id = fields.Many2one('res.users', string='Reportado por', index=True, default=lambda self: self.env.user)
+    create_user_id = fields.Many2one(
+        'res.users', 
+        string='Reportado por', 
+        index=True, 
+        default=lambda self: self.env.user, 
+        readonly=True
+    )
     resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True)
 
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
-    fecha_prevista = fields.Date("Available From")
+    fecha_prevista = fields.Date("Fecha máxima esperada para solución")
     fecha_cierre = fields.Datetime("Fecha de Cierre")
 
-    duracion_prevista = fields.Float("Duración Prevista")
-    duracion_real = fields.Float("Duración Real")
+    duracion_prevista = fields.Float("Duración Prevista", readonly=True)
+    duracion_real = fields.Float("Duración Real", readonly=True)
     
     state = fields.Selection(
         string='Estado del Tiquete',
