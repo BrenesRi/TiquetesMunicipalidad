@@ -1,4 +1,4 @@
-# Sistema Gestos de Tiquetes para la Municipalidad de Coronado
+# Sistema Gestor de Tiquetes para la Municipalidad de Coronado
 ---
 
 ## Ricardo Brenes Rodríguez, UNA

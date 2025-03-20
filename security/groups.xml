@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- Categoría Usos de Suelo -->
+    <record id="categoria_prueba" model="ir.module.category">
+        <field name="name">Prueba</field>
+        <field name="description">
+            
+        </field>
+        <field name="sequence">4</field>
+    </record>
+
+    <!-- Grupo de Consulta -->
+    <record id="grupo_consulta" model="res.groups">
+        <field name="name">Consulta</field>
+        <field name="comment">
+            Grupo que contiene los permisos de consulta de pruebas
+        </field>
+        <field name="category_id" ref="categoria_prueba"/>
+    </record>
+
+    <!-- Grupo Edición -->
+    <record id="grupo_edicion" model="res.groups">
+        <field name="name">Edición</field>
+        <field name="comment">
+            Grupo que contiene los permisos de agregar, modificar y consultar pruebas
+        </field>
+        <field name="category_id" ref="categoria_prueba"/>
+        <field name="implied_ids" eval="[(4, ref('grupo_consulta'))]"/>
+    </record>
+
+    <!-- Grupo Soporte -->
+    <record id="grupo_soporte" model="res.groups">
+        <field name="name">Soporte</field>
+        <field name="comment">
+            Tiene todas las funciones del edición y además puede eliminar información
+        </field>
+        <field name="category_id" ref="categoria_prueba"/>
+        <field name="implied_ids" eval="[(4, ref('grupo_edicion'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
+
+</odoo>
