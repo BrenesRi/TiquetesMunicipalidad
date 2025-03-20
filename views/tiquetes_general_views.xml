@@ -1,9 +1,26 @@
 <odoo>
     <data>
-
-        <!-- Define the Parent Menu -->
-        <menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5" action="action_tiquete_tree"/>
-
+        <!-- Search View -->
+        <record id="view_search_tiquete" model="ir.ui.view">
+            <field name="name">pdi.tiquete.search</field>
+            <field name="model">pdi.tiquete</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="nombre" string="Título"/>
+                    <field name="description" string="Descripción"/>
+                    <field name="state" string="Estado"/>
+                    <field name="create_user_id" string="Reportado por"/>
+                    <field name="resolver_id" string="Resuelto por"/>
+                    <field name="fecha_creacion" string="Fecha de Creación"/>
+                    <field name="fecha_prevista" string="Fecha Prevista"/>
+                    <field name="fecha_cierre" string="Fecha de Cierre"/>
+                    <filter name="filter_abiertos" string="Abiertos" domain="[( 'state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
+                    <filter name="filter_cerrados" string="Cerrados" domain="[( 'state', 'in', ['solucionado', 'cerrado'])]"/>
+                    <filter name="filter_cancelados" string="Cancelados" domain="[( 'state', '=', 'cancelado')]"/>
+                </search>
+            </field>
+        </record>
+        
         <!-- Action for Tree View -->
         <record id="action_tiquete_tree" model="ir.actions.act_window">
             <field name="name">Lista de Tiquetes</field>
@@ -13,38 +30,18 @@
 
         <!-- Action for Form View -->
         <record id="action_tiquete_form" model="ir.actions.act_window">
-            <field name="name">Properties</field>
+            <field name="name">Detalles del Tiquete</field>
             <field name="res_model">pdi.tiquete</field>
             <field name="view_mode">form</field>
         </record>
-
-        <!-- Menu for the Estate Property -->
-        <menuitem id="menu_tiquete_estados" name="Tiquetes" sequence="10" parent="menu_tiquetes"/>
-        <!-- Menu for the Estate Property -->
-        <!--<menuitem id="menu_estate_property_settings" name="Settings" sequence="11" parent="menu_estate"/>-->
-        <!-- Menu items linking to the actions -->
+        
+        <!-- Parent Menu -->
+        <menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5"/>
+        
+        <!-- Submenu for Tickets -->
+        <menuitem id="menu_tiquete_estados" name="Tiquetes" sequence="10" parent="menu_tiquetes" action="action_tiquete_tree"/>
+        
+        <!-- Submenu for Ticket Details -->
         <menuitem id="menu_tiquete_form" name="Detalles del Tiquete" parent="menu_tiquete_estados" action="action_tiquete_form"/>
-
-        <!-- Search View -->
-        <record id="view_search_tiquete" model="ir.ui.view">
-    <field name="name">pdi.tiquete.search</field>
-    <field name="model">pdi.tiquete</field>
-    <field name="arch" type="xml">
-        <search>
-            <field name="nombre" string="Título"/>
-            <field name="description" string="Descripción"/>
-            <field name="state" string="Estado"/>
-            <field name="create_user_id" string="Reportado por"/>
-            <field name="resolver_id" string="Resuelto por"/>
-            <field name="fecha_creacion" string="Fecha de Creación"/>
-            <field name="fecha_prevista" string="Fecha Prevista"/>
-            <field name="fecha_cierre" string="Fecha de Cierre"/>
-            <filter name="filter_abiertos" string="Abiertos" domain="[('state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
-            <filter name="filter_cerrados" string="Cerrados" domain="[('state', 'in', ['solucionado', 'cerrado'])]"/>
-            <filter name="filter_cancelados" string="Cancelados" domain="[('state', '=', 'cancelado')]"/>
-        </search>
-    </field>
-</record>
-
     </data>
 </odoo>
