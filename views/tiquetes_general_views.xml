@@ -27,11 +27,12 @@
     <field name="arch" type="xml">
         <form string="Detalles">
          <header>
+            <button name="button_abierto" type="object" string="Abrir Tiquete" states="registrado" class="oe_highlight"/>
             <button name="button_revision" type="object" string="Enviar a Revisión" states="registrado,abierto" class="oe_highlight"/>
-                <button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/>
-                <button name="button_solucionado" type="object" string="Marcar como Solucionado" states="en_atencion" class="oe_highlight"/>
-                <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
-                <button name="button_cancelar" type="object" string="Cancelar" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
+            <button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/>
+            <button name="button_solucionado" type="object" string="Marcar como Solucionado" states="en_atencion" class="oe_highlight"/>
+            <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
+            <button name="button_cancelar" type="object" string="Cancelar" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
             <field name="state" widget="statusbar"  statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
         </header>
         <sheet>

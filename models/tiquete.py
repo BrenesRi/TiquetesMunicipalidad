@@ -76,6 +76,11 @@ class Tiquete(models.Model):
                 raise exceptions.UserError("Solo se pueden cancelar tiquetes en estado Registrado o Abierto.")
             record.write({'state': 'cancelado'})
 
+    def button_abierto(self):
+        for record in self:
+            if record.state not in ['registrado']:
+                raise exceptions.UserError("Solo se pueden abrir tiquetes registrados")
+            record.write({'state': 'abierto'})        
 
     def button_revision(self):
         for record in self:
