@@ -25,8 +25,8 @@ class Tiquete(models.Model):
     fecha_prevista = fields.Date("Fecha máxima esperada para solución")
     fecha_cierre = fields.Datetime("Fecha de Cierre")
 
-    duracion_prevista = fields.Float("Duración Prevista", readonly=True)
-    duracion_real = fields.Float("Duración Real", readonly=True)
+    duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True)
+    duracion_real = fields.Float("Duración Real (en días)", readonly=True)
     
     state = fields.Selection(
         string='Estado del Tiquete',
@@ -40,7 +40,6 @@ class Tiquete(models.Model):
         default='registrado',
         readonly=True,
     )
-
 
     _sql_constraints = [
     ('unique_nombre', 'UNIQUE(nombre)', 'El título del tiquete debe ser único.'),
@@ -56,10 +55,11 @@ class Tiquete(models.Model):
     def _compute_duracion_prevista(self):
         for record in self:
             if record.fecha_creacion and record.fecha_prevista:
-                delta = record.fecha_prevista - record.fecha_creacion
-                record.duracion_prevista = delta.days + delta.seconds / 86400  #Convierte a días
+                delta = record.fecha_prevista - record.fecha_creacion.date()
+                record.duracion_prevista = delta.days
             else:
                 record.duracion_prevista = 0.0
+
 
     @api.onchange('fecha_cierre')
     def _onchange_fecha_cierre(self):

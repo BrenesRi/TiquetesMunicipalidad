@@ -20,6 +20,47 @@
                 </search>
             </field>
         </record>
+
+<record id="pdi_tiquete_view_form" model="ir.ui.view">
+    <field name="name">pdi.tiquete.form</field>
+    <field name="model">pdi.tiquete</field>
+    <field name="arch" type="xml">
+        <form string="Detalles">
+         <header>
+            <button name="button_revision" type="object" string="Enviar a Revisión" states="registrado,abierto" class="oe_highlight"/>
+                <button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/>
+                <button name="button_solucionado" type="object" string="Marcar como Solucionado" states="en_atencion" class="oe_highlight"/>
+                <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
+                <button name="button_cancelar" type="object" string="Cancelar" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
+            <field name="state" widget="statusbar"  statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
+        </header>
+        <sheet>
+        <h1>
+        <div>Detalles del Tiquete</div>
+        </h1>
+                <group>
+                    <group>
+                        <separator string="Información General (requerida)"/>
+                        <field name="nombre"/>
+                        <field name="description"/>
+                        <field name="create_user_id" readonly="1"/>
+                    </group>
+                    <group>
+                        <separator string="Seguimiento de plazo"/>
+                        <field name="fecha_prevista"/>
+                        <field name="fecha_creacion" readonly="1"/>
+                        <field name="duracion_prevista" readonly="1"/>
+                    </group>
+                    <separator string="Estado del tiquete"/>
+                    <div colspan="2">
+                    <field name="state" widget="statusbar" nolabel="1"
+        statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
+                    </div>
+                </group>
+            </sheet>
+        </form>
+    </field>
+</record>
         
         <!-- Action for Tree View -->
         <record id="action_tiquete_tree" model="ir.actions.act_window">
