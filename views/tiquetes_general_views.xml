@@ -53,17 +53,34 @@
                         <field name="fecha_creacion" readonly="1"/>
                         <field name="duracion_prevista" readonly="1"/>
                     </group>
-                    <separator string="Estado del tiquete"/>
-                    <div colspan="2">
-                    <field name="state" widget="statusbar" nolabel="1"
-        statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
-                    </div>
                 </group>
+                <notebook>
+            <page string="Administración del tiquete">
+        <group>
+            <separator string="⚠️ Solo Administradores: Modificar aspectos técnicos del tiquete" colspan="2"/>
+            <field name="state"/>
+            <field name="prioridad"/>
+        </group>
+    </page>
+            <page string="Pasos de Solución">
+            <!-- <field name="offer_ids">
+                <tree>
+                  <field name="price" />
+                  <field name="partner_id" />
+                  <field name="validity" />
+                  <field name="date_deadline" />
+                  <button type="object" name="action_accept" string="Accept" icon="fa-check" 
+                    attrs="{'invisible': [('status','not in',[None,False])]}"/>
+                  <field name="status" />
+                </tree>
+              </field> -->
+            </page>
+          </notebook>
             </sheet>
         </form>
     </field>
 </record>
-
+    <!-- Tree View -->
 <record id="pdi_tiquete_view_tree" model="ir.ui.view">
     <field name="name">pdi.tiquete.tree</field>
     <field name="model">pdi.tiquete</field>

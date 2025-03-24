@@ -1,1 +1,1 @@
-from . import tiquete
+from . import tiquete, tiquete_solucion

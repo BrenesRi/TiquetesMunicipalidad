@@ -9,6 +9,7 @@ class Tiquete(models.Model):
     _description = "Módulo de Tiquetes de soporte técnico"
     #_order = "id desc"
 
+    #Aspectos básicos
     nombre = fields.Char("Título", required=True)
     description = fields.Text("Descripción", required=True)
 
@@ -19,8 +20,12 @@ class Tiquete(models.Model):
         default=lambda self: self.env.user, 
         readonly=True
     )
-    resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True)
 
+    #Relaciones
+    resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True)
+    sulucion_ids = fields.One2many('pdi.tiquete.solucion', 'tiquete_id', string="Pasos de Solución")
+
+    #Seguimiento de plazos
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
     fecha_prevista = fields.Date("Fecha esperada de solución")
     fecha_cierre = fields.Datetime("Fecha de Cierre")
@@ -28,6 +33,7 @@ class Tiquete(models.Model):
     duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True)
     duracion_real = fields.Float("Duración Real (en días)", readonly=True)
     
+    #Estado y prioridad
     state = fields.Selection([
     ('registrado', '📝 Registrado'),
     ('abierto', '🚀 Abierto'),
@@ -46,7 +52,7 @@ class Tiquete(models.Model):
     ('critica', '🔥 Crítica'),
     ], string="Prioridad", default='por_definir')
 
-
+    #Validaciones
     _sql_constraints = [
     ('unique_nombre', 'UNIQUE(nombre)', 'El título del tiquete debe ser único.'),
     ('fecha_cierre_check', 'CHECK(fecha_cierre >= fecha_creacion)', 
