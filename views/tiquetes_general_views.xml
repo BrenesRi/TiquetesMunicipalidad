@@ -21,6 +21,7 @@
             </field>
         </record>
 
+        <!-- Form View -->
 <record id="pdi_tiquete_view_form" model="ir.ui.view">
     <field name="name">pdi.tiquete.form</field>
     <field name="model">pdi.tiquete</field>
@@ -62,6 +63,23 @@
         </form>
     </field>
 </record>
+
+<record id="pdi_tiquete_view_tree" model="ir.ui.view">
+    <field name="name">pdi.tiquete.tree</field>
+    <field name="model">pdi.tiquete</field>
+    <field name="arch" type="xml">
+        <tree string="Tiquetes de Soporte">
+            <field name="nombre"/>
+            <field name="description"/>
+            <field name="create_user_id"/>
+            <field name="fecha_creacion"/>
+            <field name="fecha_prevista"/>
+            <field name="prioridad" widget="badge"/>
+            <field name="state" widget="badge"/>
+        </tree>
+    </field>
+</record>
+
         
         <!-- Action for Tree View -->
         <record id="action_tiquete_tree" model="ir.actions.act_window">
@@ -83,7 +101,7 @@
         <!-- Submenu for Tickets -->
         <menuitem id="menu_tiquete_estados" name="Tiquetes" sequence="10" parent="menu_tiquetes" action="action_tiquete_tree"/>
         
-        <!-- Submenu for Ticket Details -->
-        <menuitem id="menu_tiquete_form" name="Detalles del Tiquete" parent="menu_tiquete_estados" action="action_tiquete_form"/>
+        <!-- Submenu for all Ticket Tree -->
+        <menuitem id="menu_tiquete_tree" name="Todos los tiquetes" parent="menu_tiquete_estados" action="action_tiquete_tree"/>
     </data>
 </odoo>

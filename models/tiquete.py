@@ -22,24 +22,30 @@ class Tiquete(models.Model):
     resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True)
 
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
-    fecha_prevista = fields.Date("Fecha máxima esperada para solución")
+    fecha_prevista = fields.Date("Fecha esperada de solución")
     fecha_cierre = fields.Datetime("Fecha de Cierre")
 
     duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True)
     duracion_real = fields.Float("Duración Real (en días)", readonly=True)
     
-    state = fields.Selection(
-        string='Estado del Tiquete',
-        selection=[('registrado', 'Registrado'), 
-                   ('abierto', 'Abierto'), 
-                   ('en_revision', 'En Revisión'), 
-                   ('en_atencion', 'En Atención'),
-                   ('solucionado', 'Solucionado'),
-                   ('cerrado', 'Cerrado'),
-                   ('cancelado', 'Cancelado')],
-        default='registrado',
-        readonly=True,
-    )
+    state = fields.Selection([
+    ('registrado', '📝 Registrado'),
+    ('abierto', '🚀 Abierto'),
+    ('en_revision', '🔍 En Revisión'),
+    ('en_atencion', '⚙️ En Atención'),
+    ('solucionado', '✅ Solucionado'),
+    ('cerrado', '🔒 Cerrado'),
+    ('cancelado', '❌ Cancelado'),
+    ], default='registrado')
+
+    prioridad = fields.Selection([
+    ('por_definir', '🔵 Por Definir'),
+    ('baja', '🟢 Baja'),
+    ('media', '🟡 Media'),
+    ('alta', '🔴 Alta'),
+    ('critica', '🔥 Crítica'),
+    ], string="Prioridad", default='por_definir')
+
 
     _sql_constraints = [
     ('unique_nombre', 'UNIQUE(nombre)', 'El título del tiquete debe ser único.'),
