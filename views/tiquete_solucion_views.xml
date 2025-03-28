@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tiquete_solucion_view_form" model="ir.ui.view">
+        <field name="name">pdi.tiquete.solucion.form</field>
+        <field name="model">pdi.tiquete.solucion</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <group>
+                        <field name="description" />
+                        <field name="estado" />
+                        <field name="fecha_creacion" />
+                        <field name="create_user_id" />
+                        <field name="tiquete" />
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="tiquete_solucion_view_tree" model="ir.ui.view">
+        <field name="name">pdi.tiquete.solucion.tree</field>
+        <field name="model">pdi.tiquete.solucion</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="description" />
+                <field name="estado" />
+                <field name="fecha_creacion" />
+                <field name="create_user_id" />
+                <field name="tiquete" />
+            </tree>
+        </field>
+    </record>
+</odoo>

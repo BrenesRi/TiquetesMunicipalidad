@@ -63,23 +63,23 @@
         </group>
     </page>
             <page string="Pasos de Solución">
-            <!-- <field name="offer_ids">
+            <field name="sulucion_ids">
                 <tree>
-                  <field name="price" />
-                  <field name="partner_id" />
-                  <field name="validity" />
-                  <field name="date_deadline" />
+                 <field name="description" />
+                 <field name="fecha_creacion" />
+                 <field name="create_user_id" />
                   <button type="object" name="action_accept" string="Accept" icon="fa-check" 
-                    attrs="{'invisible': [('status','not in',[None,False])]}"/>
-                  <field name="status" />
+                    attrs="{'invisible': [('estado','not in',[None,False])]}"/>
+                  <field name="estado" />
                 </tree>
-              </field> -->
+              </field>
             </page>
           </notebook>
             </sheet>
         </form>
     </field>
 </record>
+
     <!-- Tree View -->
 <record id="pdi_tiquete_view_tree" model="ir.ui.view">
     <field name="name">pdi.tiquete.tree</field>

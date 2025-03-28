@@ -11,9 +11,10 @@ class TiqueteSolucion(models.Model):
 
     # Basic
     description = fields.Text("Descripción", required=True)
-    estado = fields.Selection(selection=[('aceptado', "Aceptado"), 
-                                         ('rechazado', "Rechazado"), 
-                                         ], string="Estado", copy=False)
+    estado = fields.Selection(selection=[('final', "Solución Final"), 
+                                         ('no final', "Aún no solucionado"), 
+                                         ], default='no final'
+                                         '', string="Estado", copy=False)
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
     
     # Relation

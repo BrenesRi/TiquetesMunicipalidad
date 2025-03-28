@@ -25,6 +25,6 @@
         'security/ir.model.access.csv',
 
         'views/tiquetes_general_views.xml',
-        #'views/estate_property_type_views.xml',
+        'views/tiquete_solucion_views.xml',
     ]
 }
