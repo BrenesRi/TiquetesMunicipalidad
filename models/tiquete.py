@@ -7,11 +7,18 @@ _logger = logging.getLogger(__name__)
 class Tiquete(models.Model):
     _name = "pdi.tiquete"
     _description = "Módulo de Tiquetes de soporte técnico"
-    #_order = "id desc"
+
+    #Para el uso de correo electrónico
+    _inherit = ["mail.thread", "mail.activity.mixin"]
+
+    alias_id = fields.Many2one(
+        "mail.alias", string="Alias", 
+        help="Dirección de correo utilizada para la creación de tiquetes."
+    )
 
     #Aspectos básicos
-    nombre = fields.Char("Título", required=True)
-    description = fields.Text("Descripción", required=True)
+    nombre = fields.Char("Título", required=True, tracking=True)
+    description = fields.Text("Descripción", required=True, tracking=True)
 
     create_user_id = fields.Many2one(
         'res.users', 
@@ -22,15 +29,15 @@ class Tiquete(models.Model):
     )
 
     #Relaciones
-    resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True)
+    resolver_id = fields.Many2one('res.partner', string='Resuelto por', index=True, tracking=True)
     sulucion_ids = fields.One2many('pdi.tiquete.solucion', 'tiquete_id', string="Pasos de Solución")
 
     #Seguimiento de plazos
-    fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
-    fecha_prevista = fields.Date("Fecha esperada de solución")
+    fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False, tracking=True)
+    fecha_prevista = fields.Date("Fecha esperada de solución", tracking=True)
     fecha_cierre = fields.Datetime("Fecha de Cierre")
 
-    duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True)
+    duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True, tracking=True)
     duracion_real = fields.Float("Duración Real (en días)", readonly=True)
     
     #Estado y prioridad
@@ -42,7 +49,7 @@ class Tiquete(models.Model):
     ('solucionado', '✅ Solucionado'),
     ('cerrado', '🔒 Cerrado'),
     ('cancelado', '❌ Cancelado'),
-    ], default='registrado')
+    ], default='registrado', tracking=True)
 
     prioridad = fields.Selection([
     ('por_definir', '🔵 Por Definir'),
@@ -50,7 +57,7 @@ class Tiquete(models.Model):
     ('media', '🟡 Media'),
     ('alta', '🔴 Alta'),
     ('critica', '🔥 Crítica'),
-    ], string="Prioridad", default='por_definir')
+    ], string="Prioridad", default='por_definir', tracking=True)
 
     #Validaciones
     _sql_constraints = [
@@ -72,16 +79,28 @@ class Tiquete(models.Model):
             else:
                 record.duracion_prevista = 0.0
 
+    @api.onchange('fecha_prevista')
+    def _onchange_fecha_prevista(self):
+        if self.fecha_creacion and self.fecha_prevista and self.fecha_prevista < self.fecha_creacion.date():
+            raise exceptions.ValidationError("La fecha prevista no puede ser anterior a la fecha de creación.")
 
     @api.onchange('fecha_cierre')
     def _onchange_fecha_cierre(self):
+        if self.fecha_creacion and self.fecha_cierre and self.fecha_cierre < self.fecha_creacion:
+            raise exceptions.ValidationError("La fecha de cierre no puede ser anterior a la fecha de creación.")
         if self.fecha_creacion and self.fecha_cierre:
             delta = self.fecha_cierre - self.fecha_creacion
             self.duracion_real = delta.days + delta.seconds / 86400
         else:
             self.duracion_real = 0.0
 
-
+    @api.constrains('duracion_prevista')
+    def _check_duracion_prevista(self):
+        for record in self:
+            if record.duracion_prevista <= 0:
+                raise exceptions.ValidationError("La duración prevista debe ser un número positivo.")
+    
+    #Botones para cambiar el tiquete de estado
     def button_cancelar(self):
         for record in self:
             if record.state not in ['registrado', 'abierto']:
@@ -123,5 +142,16 @@ class Tiquete(models.Model):
         for record in self:
             if record.duracion_prevista <= 0:
                 raise exceptions.ValidationError("La duración prevista debe ser un número positivo.")
+    
+     # Bloquear edición del tiquete al colocarlo como "cancelado"
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        fields = super(Tiquete, self).fields_get(allfields, attributes)
+        if self.env.context.get('active_id'):
+            tiquete = self.browse(self.env.context['active_id'])
+            if tiquete.state == 'cancelado':
+                for field in fields:
+                    fields[field]['readonly'] = True
+        return fields
     
         

@@ -2,7 +2,7 @@
 {
     'name': "Sistema de Tiquetes",
     'version': '16.0.1.0.0',
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
     'author': "Ricardo Brenes Rodríguez",
 
     'installable': True,

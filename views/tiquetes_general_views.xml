@@ -55,10 +55,16 @@
                     </group>
                 </group>
                 <notebook>
-            <page string="Administración del tiquete">
+            <page string="(Admin) Administración del tiquete">
         <group>
             <separator string="⚠️ Solo Administradores: Modificar aspectos técnicos del tiquete" colspan="2"/>
             <field name="state"/>
+            <field name="prioridad"/>
+        </group>
+    </page>
+    <page string="Priorización del tiquete">
+        <group>
+            <separator string="Establecer prioridad del tiquete" colspan="2"/>
             <field name="prioridad"/>
         </group>
     </page>
