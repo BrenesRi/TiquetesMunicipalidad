@@ -115,7 +115,7 @@ class Tiquete(models.Model):
 
     def button_revision(self):
         for record in self:
-            if record.state not in ['registrado', 'abierto']:
+            if record.state not in ['abierto']:
                 raise exceptions.UserError("Para poner un tiquete en revisión, debe estar Registrado o Abierto.")
             record.write({'state': 'en_revision'})
 

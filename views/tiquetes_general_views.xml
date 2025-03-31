@@ -31,7 +31,6 @@
             <button name="button_abierto" type="object" string="Abrir Tiquete" states="registrado" class="oe_highlight"/>
             <button name="button_revision" type="object" string="Enviar a Revisión" states="registrado,abierto" class="oe_highlight"/>
             <button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/>
-            <button name="button_solucionado" type="object" string="Marcar como Solucionado" states="en_atencion" class="oe_highlight"/>
             <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
             <button name="button_cancelar" type="object" string="Cancelar" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
             <field name="state" widget="statusbar"  statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
@@ -62,13 +61,13 @@
             <field name="prioridad"/>
         </group>
     </page>
-    <page string="Priorización del tiquete">
+    <page string="Priorización del tiquete" attrs="{'invisible': [('state', '!=', 'en_revision')]}">
         <group>
             <separator string="Establecer prioridad del tiquete" colspan="2"/>
             <field name="prioridad"/>
         </group>
     </page>
-            <page string="Pasos de Solución">
+            <page string="Pasos de Solución" attrs="{'invisible': [('state', 'not in', ['en_revision', 'en_atencion', 'solucionado', 'cancelado', 'cerrado'])]}">
             <field name="sulucion_ids">
                 <tree>
                  <field name="description" />
@@ -80,6 +79,12 @@
                 </tree>
               </field>
             </page>
+            <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cancelado', 'cerrado'])]}">
+        <group>
+            <separator string="Establecer prioridad del tiquete" colspan="2"/>
+            <field name="prioridad"/>
+        </group>
+    </page>
           </notebook>
             </sheet>
         </form>
