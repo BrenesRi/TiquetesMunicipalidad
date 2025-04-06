@@ -12,7 +12,6 @@
                         <field name="estado" />
                         <field name="fecha_creacion" />
                         <field name="create_user_id" />
-                        <field name="tiquete_id" />
                     </group>
                 </sheet>
             </form>
@@ -28,7 +27,6 @@
                 <field name="estado" />
                 <field name="fecha_creacion" />
                 <field name="create_user_id" />
-                <field name="tiquete_id" />
             </tree>
         </field>
     </record>

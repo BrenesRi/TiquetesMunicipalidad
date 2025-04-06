@@ -7,14 +7,14 @@ _logger = logging.getLogger(__name__)
 
 class TiqueteSolucion(models.Model):
     _name = "pdi.tiquete.solucion"
-    _description = "Pasos de solución de un tiquete"
+    _description = "Paso de solución de un tiquete"
 
     # Basic
-    description = fields.Text("Descripción", required=True)
+    description = fields.Text("Descripción", required=True, tracking=True)
     estado = fields.Selection(selection=[('final', "Solución Final"), 
-                                         ('no final', "Aún no solucionado"), 
+                                         ('no final', "Aún no solucionado"),
                                          ], default='no final'
-                                         '', string="Estado", copy=False)
+                                         '', string="Estado", copy=False, readonly=True, tracking=True)
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False)
     
     # Relation
@@ -29,9 +29,9 @@ class TiqueteSolucion(models.Model):
 
     def action_accept(self):
         for line in  self:
-            line.tiquete_id.resolver_id = line.create_user_id
+            line.tiquete_id.resolver_id = line.create_user_id.id
             line.tiquete_id.state = "solucionado"
-            line.estado = "Accepted"
+            line.estado = "final"
             line.tiquete_id.fecha_cierre = fields.Datetime.now()
             line.tiquete_id.duracion_real = (line.tiquete_id.fecha_cierre - line.tiquete_id.fecha_creacion).days
             _logger.info(f"TIQUETE SOLUCIONADO: {line.tiquete_id.nombre}")

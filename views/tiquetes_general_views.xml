@@ -33,6 +33,7 @@
             <button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/>
             <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
             <button name="button_cancelar" type="object" string="Cancelar" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
+            <button name="button_reabrir" type="object" string="Reabrir Tiquete" states="cerrado, cancelado" class="oe_highlight"/>
             <field name="state" widget="statusbar"  statusbar_visible="Registrado,Abierto,En Revisión,En Atención,Solucionado,Cerrado,Cancelado"/>
         </header>
         <sheet>
@@ -70,19 +71,20 @@
             <page string="Pasos de Solución" attrs="{'invisible': [('state', 'not in', ['en_revision', 'en_atencion', 'solucionado', 'cancelado', 'cerrado'])]}">
             <field name="sulucion_ids">
                 <tree>
-                 <field name="description" />
-                 <field name="fecha_creacion" />
-                 <field name="create_user_id" />
-                  <button type="object" name="action_accept" string="Accept" icon="fa-check" 
-                    attrs="{'invisible': [('estado','not in',[None,False])]}"/>
-                  <field name="estado" />
+                    <field name="description" />
+                    <field name="fecha_creacion" />
+                    <field name="create_user_id" />
+                    <field name="estado" />
+                    <button name="action_accept" type="object" string="Accept" icon="fa-check"/>
                 </tree>
               </field>
             </page>
-            <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cancelado', 'cerrado'])]}">
+            <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cerrado'])]}">
         <group>
-            <separator string="Establecer prioridad del tiquete" colspan="2"/>
-            <field name="prioridad"/>
+            <separator string="Información del tiquete solucionado" colspan="2"/>
+            <field name="resolver_id"/>
+            <field name="fecha_cierre"/>
+            <field name="duracion_real"/>
         </group>
     </page>
           </notebook>

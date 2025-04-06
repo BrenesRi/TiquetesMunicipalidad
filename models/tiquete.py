@@ -35,7 +35,7 @@ class Tiquete(models.Model):
     #Seguimiento de plazos
     fecha_creacion = fields.Datetime("Fecha de Creación", default=fields.Datetime.now, readonly=True, copy=False, tracking=True)
     fecha_prevista = fields.Date("Fecha esperada de solución", tracking=True)
-    fecha_cierre = fields.Datetime("Fecha de Cierre")
+    fecha_cierre = fields.Datetime("Fecha de Solución", readonly=True, copy=False, tracking=True)
 
     duracion_prevista = fields.Float("Duración Prevista (en días)", compute="_compute_duracion_prevista", store=True, readonly=True, tracking=True)
     duracion_real = fields.Float("Duración Real (en días)", readonly=True)
@@ -135,7 +135,20 @@ class Tiquete(models.Model):
         for record in self:
             if record.state not in ['solucionado']:
                 raise exceptions.UserError("Para cerrar un tiquete, debe haber sido solucionado.")
-            record.write({'state': 'cerrado'})
+        for line in self:
+            line.fecha_cierre = fields.Datetime.now()
+            line.duracion_real = (line.fecha_cierre - line.fecha_creacion).days
+            line.estado = "cerrado"
+            line.write({'state': 'cerrado'})
+        
+    def button_reabrir(self):
+        for record in self:
+            if record.state not in ['cerrado']:
+                raise exceptions.UserError("Para reabrir un tiquete, debe haber sido cerrado.")
+            record.fecha_cierre = False
+            record.duracion_real = 0.0
+            record.estado = "en_atencion"
+            record.write({'state': 'en_atencion'})
     
     @api.constrains('duracion_prevista')
     def _check_duracion_prevista(self):
@@ -150,6 +163,16 @@ class Tiquete(models.Model):
         if self.env.context.get('active_id'):
             tiquete = self.browse(self.env.context['active_id'])
             if tiquete.state == 'cancelado':
+                for field in fields:
+                    fields[field]['readonly'] = True
+        return fields
+    
+    @api.model
+    def fields_get(self, allfields=None, attributes=None):
+        fields = super(Tiquete, self).fields_get(allfields, attributes)
+        if self.env.context.get('active_id'):
+            tiquete = self.browse(self.env.context['active_id'])
+            if tiquete.state == 'cerrado':
                 for field in fields:
                     fields[field]['readonly'] = True
         return fields
