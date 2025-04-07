@@ -64,8 +64,6 @@ class Tiquete(models.Model):
     ('unique_nombre', 'UNIQUE(nombre)', 'El título del tiquete debe ser único.'),
     ('fecha_cierre_check', 'CHECK(fecha_cierre >= fecha_creacion)', 
     'La fecha de cierre debe ser posterior a la fecha de creación.'),
-    ('fecha_prevista_check', 'CHECK(fecha_prevista >= fecha_creacion)', 
-    'La fecha prevista debe ser posterior a la fecha de creación.'),
     ('check_estado', "CHECK(state IN ('registrado', 'abierto', 'en_revision', 'en_atencion', 'solucionado', 'cerrado', 'cancelado'))", 
     'El estado del tiquete debe ser válido.'),
     ]
@@ -97,7 +95,7 @@ class Tiquete(models.Model):
     @api.constrains('duracion_prevista')
     def _check_duracion_prevista(self):
         for record in self:
-            if record.duracion_prevista <= 0:
+            if record.duracion_prevista < -1:
                 raise exceptions.ValidationError("La duración prevista debe ser un número positivo.")
     
     #Botones para cambiar el tiquete de estado
@@ -149,14 +147,8 @@ class Tiquete(models.Model):
             record.duracion_real = 0.0
             record.estado = "en_atencion"
             record.write({'state': 'en_atencion'})
-    
-    @api.constrains('duracion_prevista')
-    def _check_duracion_prevista(self):
-        for record in self:
-            if record.duracion_prevista <= 0:
-                raise exceptions.ValidationError("La duración prevista debe ser un número positivo.")
-    
-     # Bloquear edición del tiquete al colocarlo como "cancelado"
+   
+     # Bloquear edición del tiquete al colocarlo como "cancelado" o "cerrado"
     @api.model
     def fields_get(self, allfields=None, attributes=None):
         fields = super(Tiquete, self).fields_get(allfields, attributes)
