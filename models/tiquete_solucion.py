@@ -28,11 +28,11 @@ class TiqueteSolucion(models.Model):
     tiquete_id = fields.Many2one('pdi.tiquete', required=True)
 
     def action_accept(self):
-        for line in  self:
-            line.tiquete_id.resolver_id = line.create_user_id.id
+        for line in self:
+            line.tiquete_id.resolver_id = line.create_uid.partner_id.id
             line.tiquete_id.state = "solucionado"
             line.estado = "final"
             line.tiquete_id.fecha_cierre = fields.Datetime.now()
-            line.tiquete_id.duracion_real = (line.tiquete_id.fecha_cierre - line.tiquete_id.fecha_creacion).days
-            _logger.info(f"TIQUETE SOLUCIONADO: {line.tiquete_id.nombre}")
+        _logger.info(f"TIQUETE SOLUCIONADO: {line.tiquete_id.nombre}")
+
 

@@ -70,7 +70,7 @@
                     <field name="fecha_creacion"/>
                     <field name="create_user_id"/>
                     <field name="estado"/>
-                    <button name="action_accept" type="object" string="Accept" icon="fa-check"/>
+                    <button name="action_accept" type="object" string="Solución final (Solucionar Tiquete)" icon="fa-check"/>
                 </tree>
               </field>
             </page>

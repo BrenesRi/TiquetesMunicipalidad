@@ -73,7 +73,7 @@ class Tiquete(models.Model):
         for record in self:
             if record.fecha_creacion and record.fecha_prevista:
                 delta = record.fecha_prevista - record.fecha_creacion.date()
-                record.duracion_prevista = delta.days
+                record.duracion_prevista = delta.days + 1
             else:
                 record.duracion_prevista = 0.0
 
@@ -87,10 +87,11 @@ class Tiquete(models.Model):
         if self.fecha_creacion and self.fecha_cierre and self.fecha_cierre < self.fecha_creacion:
             raise exceptions.ValidationError("La fecha de cierre no puede ser anterior a la fecha de creación.")
         if self.fecha_creacion and self.fecha_cierre:
-            delta = self.fecha_cierre - self.fecha_creacion
-            self.duracion_real = delta.days + delta.seconds / 86400
+            delta = self.fecha_cierre.date() - self.fecha_creacion.date()
+            self.duracion_real = delta.days #A este no se le suma 1 porque ya se cuenta el día de creación
         else:
             self.duracion_real = 0.0
+
 
     @api.constrains('duracion_prevista')
     def _check_duracion_prevista(self):
