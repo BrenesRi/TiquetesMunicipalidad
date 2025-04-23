@@ -22,12 +22,12 @@
         </record>
 
         <!-- Form View -->
-<record id="pdi_tiquete_view_form" model="ir.ui.view">
-    <field name="name">pdi.tiquete.form</field>
+<record id="pdi_tiquete_form_minimal" model="ir.ui.view">
+    <field name="name">pdi.tiquete.form.minimal</field>
     <field name="model">pdi.tiquete</field>
     <field name="arch" type="xml">
         <form string="Detalles">
-         <header>
+        <header>
             <button name="button_abierto" type="object" string="Notificar Tiquete" states="registrado" class="oe_highlight"/>
             <!--<button name="button_revision" type="object" string="Enviar a Revisión" states="registrado,abierto" class="oe_highlight"/> -->
             <!--<button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/> -->
@@ -36,8 +36,8 @@
             <button name="button_reabrir" type="object" string="Reabrir Tiquete" states="cerrado, cancelado" class="oe_highlight"/>
             <field name="state" widget="statusbar" options="{'clickable': 1}"/>
         </header>
-        <sheet>
-        <h1>
+            <sheet>
+                <h1>
         <div>Detalles del Tiquete</div>
         </h1>
                 <group attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}">
@@ -56,7 +56,7 @@
                         <field name="state" invisible="1"/>
                     </group>
                 </group>
-                <notebook>
+            <notebook>
     <page string="Priorización del tiquete" attrs="{'invisible': [('state', '!=', 'en_revision')]}">
         <group>
             <separator string="Establecer prioridad del tiquete" colspan="2"/>
@@ -85,9 +85,14 @@
     </page>
           </notebook>
             </sheet>
+            <div class="oe_chatter">
+                <field name="message_ids" widget="mail_thread"/>
+                <field name="activity_ids" widget="mail_activity"/>
+            </div>
         </form>
     </field>
 </record>
+
 
     <!-- Tree View -->
 <record id="pdi_tiquete_view_tree" model="ir.ui.view">

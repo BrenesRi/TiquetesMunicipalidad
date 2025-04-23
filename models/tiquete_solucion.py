@@ -9,6 +9,8 @@ class TiqueteSolucion(models.Model):
     _name = "pdi.tiquete.solucion"
     _description = "Paso de solución de un tiquete"
 
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
     # Basic
     description = fields.Text("Descripción", required=True, tracking=True)
     estado = fields.Selection(selection=[('final', "Solución Final"), 

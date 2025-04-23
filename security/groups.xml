@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Categoría Usos de Suelo -->
+    <!-- Categorías para sistema gestor de tiquetes informáticos -->
     <record id="categoria_prueba" model="ir.module.category">
         <field name="name">Prueba</field>
         <field name="description">

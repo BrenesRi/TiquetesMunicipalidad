@@ -8,8 +8,7 @@ class Tiquete(models.Model):
     _name = "pdi.tiquete"
     _description = "Módulo de Tiquetes de soporte técnico"
 
-    #Para el uso de correo electrónico
-    _inherit = ["mail.thread", "mail.activity.mixin"]
+    _inherit = ['mail.thread', 'mail.activity.mixin']
 
     alias_id = fields.Many2one(
         "mail.alias", string="Alias", 
