@@ -136,7 +136,7 @@ class Tiquete(models.Model):
         for line in self:
             line.fecha_cierre = fields.Datetime.now()
             line.duracion_real = (line.fecha_cierre - line.fecha_creacion).days
-            line.estado = "cerrado"
+            line.state = "cerrado"
             line.write({'state': 'cerrado'})
         
     def button_reabrir(self):
@@ -145,7 +145,7 @@ class Tiquete(models.Model):
                 raise exceptions.UserError("Para reabrir un tiquete, debe haber sido cerrado.")
             record.fecha_cierre = False
             record.duracion_real = 0.0
-            record.estado = "en_atencion"
+            record.state = "en_atencion"
             record.write({'state': 'en_atencion'})
    
      # Bloquear edición del tiquete al colocarlo como "cancelado" o "cerrado"

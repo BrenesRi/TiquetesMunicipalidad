@@ -40,18 +40,20 @@
         <h1>
         <div>Detalles del Tiquete</div>
         </h1>
-                <group>
+                <group attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}">
                     <group>
                         <separator string="Información General (requerida)"/>
-                        <field name="nombre"/>
-                        <field name="description"/>
+                        <field name="nombre" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
+                        <field name="description" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
                         <field name="create_user_id" readonly="1"/>
+                        <field name="state" invisible="1"/>
                     </group>
                     <group>
                         <separator string="Seguimiento de plazo"/>
-                        <field name="fecha_prevista"/>
+                        <field name="fecha_prevista" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
                         <field name="fecha_creacion" readonly="1"/>
                         <field name="duracion_prevista" readonly="1"/>
+                        <field name="state" invisible="1"/>
                     </group>
                 </group>
                 <notebook>
@@ -64,10 +66,10 @@
             <page string="Pasos de Solución" attrs="{'invisible': [('state', 'not in', ['en_revision', 'en_atencion', 'solucionado', 'cancelado', 'cerrado'])]}">
             <field name="sulucion_ids">
                 <tree>
-                    <field name="description" />
-                    <field name="fecha_creacion" />
-                    <field name="create_user_id" />
-                    <field name="estado" />
+                    <field name="description"/>
+                    <field name="fecha_creacion"/>
+                    <field name="create_user_id"/>
+                    <field name="estado"/>
                     <button name="action_accept" type="object" string="Accept" icon="fa-check"/>
                 </tree>
               </field>
@@ -75,9 +77,10 @@
             <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cerrado'])]}">
         <group>
             <separator string="Información del tiquete solucionado" colspan="2"/>
-            <field name="resolver_id"/>
-            <field name="fecha_cierre"/>
-            <field name="duracion_real"/>
+            <field name="resolver_id" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
+            <field name="fecha_cierre" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
+            <field name="duracion_real" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
+            <field name="state" invisible="1"/>
         </group>
     </page>
           </notebook>
