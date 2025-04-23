@@ -108,7 +108,7 @@ class Tiquete(models.Model):
     def button_abierto(self):
         for record in self:
             if record.state not in ['registrado']:
-                raise exceptions.UserError("Solo se pueden abrir tiquetes registrados")
+                raise exceptions.UserError("Solo se pueden notificar tiquetes registrados")
             record.write({'state': 'abierto'})        
 
     def button_revision(self):
@@ -149,22 +149,12 @@ class Tiquete(models.Model):
             record.write({'state': 'en_atencion'})
    
      # Bloquear edición del tiquete al colocarlo como "cancelado" o "cerrado"
-    @api.model
+    @api.model  
     def fields_get(self, allfields=None, attributes=None):
         fields = super(Tiquete, self).fields_get(allfields, attributes)
         if self.env.context.get('active_id'):
             tiquete = self.browse(self.env.context['active_id'])
-            if tiquete.state == 'cancelado':
-                for field in fields:
-                    fields[field]['readonly'] = True
-        return fields
-    
-    @api.model
-    def fields_get(self, allfields=None, attributes=None):
-        fields = super(Tiquete, self).fields_get(allfields, attributes)
-        if self.env.context.get('active_id'):
-            tiquete = self.browse(self.env.context['active_id'])
-            if tiquete.state == 'cerrado':
+            if tiquete.state in ['cerrado', 'cancelado']:
                 for field in fields:
                     fields[field]['readonly'] = True
         return fields
