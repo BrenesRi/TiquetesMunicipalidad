@@ -1,3 +1,9 @@
 id,name,model_id/id,group_id/id,perm_read,perm_write,perm_create,perm_unlink
-estate.access_estate_property,access_estate_property,model_pdi_tiquete,base.group_user,1,1,1,1
-estate.access_estate_property_solucion,access_estate_property_solucion,model_pdi_tiquete_solucion,base.group_user,1,1,1,1
+pdi.access_tiquete_usuario,access_tiquete_usuario,model_pdi_tiquete,grupo_usuario,1,1,1,0
+pdi.access_tiquete_soporte,access_tiquete_soporte,model_pdi_tiquete,grupo_soporte,1,1,1,0
+pdi.access_tiquete_admin,access_tiquete_admin,model_pdi_tiquete,grupo_admin,1,1,1,1
+
+pdi.access_solucion_usuario,access_solucion_usuario,model_pdi_tiquete_solucion,grupo_usuario,1,0,0,0
+pdi.access_solucion_soporte,access_solucion_soporte,model_pdi_tiquete_solucion,grupo_soporte,1,1,1,0
+pdi.access_solucion_admin,access_solucion_admin,model_pdi_tiquete_solucion,grupo_admin,1,1,1,1
+

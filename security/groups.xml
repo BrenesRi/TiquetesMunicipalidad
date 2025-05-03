@@ -1,42 +1,39 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <!-- Categorías para sistema gestor de tiquetes informáticos -->
-    <record id="categoria_prueba" model="ir.module.category">
-        <field name="name">Prueba</field>
-        <field name="description">
-            
-        </field>
+
+    <record id="categoria_tiquetes" model="ir.module.category">
+        <field name="name">Gestión de Tiquetes</field>
+        <field name="description">Gestión de usuarios y roles para tiquetes informáticos</field>
         <field name="sequence">4</field>
     </record>
 
-    <!-- Grupo de Consulta -->
-    <record id="grupo_consulta" model="res.groups">
-        <field name="name">Consulta</field>
+    <!-- Grupo de Usuario -->
+    <record id="grupo_usuario" model="res.groups">
+        <field name="name">Usuario de Tiquetes</field>
         <field name="comment">
-            Grupo que contiene los permisos de consulta de pruebas
+            Grupo que contiene los permisos de crear, modificar y consultar los tiquetes que el mismo ha creado
         </field>
-        <field name="category_id" ref="categoria_prueba"/>
-    </record>
-
-    <!-- Grupo Usuario -->
-    <record id="grupo_edicion" model="res.groups">
-        <field name="name">Edición</field>
-        <field name="comment">
-            Grupo que contiene los permisos de agregar, modificar y consultar sus pripios tiquetes
-        </field>
-        <field name="category_id" ref="categoria_prueba"/>
-        <field name="implied_ids" eval="[(4, ref('grupo_consulta'))]"/>
+        <field name="category_id" ref="categoria_tiquetes"/>
     </record>
 
     <!-- Grupo Soporte -->
     <record id="grupo_soporte" model="res.groups">
-        <field name="name">Soporte</field>
+        <field name="name">Empleado de Soporte</field>
         <field name="comment">
-            Tiene todas las funciones del edición y además puede eliminar información
+            Grupo que contiene los permisos de agregar, modificar y consultar todos los tiquetes y pasos de solución
         </field>
-        <field name="category_id" ref="categoria_prueba"/>
-        <field name="implied_ids" eval="[(4, ref('grupo_edicion'))]"/>
-        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+        <field name="category_id" ref="categoria_tiquetes"/>
+        <field name="implied_ids" eval="[(4, ref('grupo_usuario'))]"/>
     </record>
 
+    <!-- Grupo Administrador de Soporte -->
+    <record id="grupo_admin" model="res.groups">
+        <field name="name">Administrador de Soporte</field>
+        <field name="comment">
+            Tiene todas las funciones de edición, además puede eliminar información y tiene acceso a vistas avanzadas
+        </field>
+        <field name="category_id" ref="categoria_tiquetes"/>
+        <field name="implied_ids" eval="[(4, ref('grupo_soporte'))]"/>
+        <field name="users" eval="[(4, ref('base.user_root')), (4, ref('base.user_admin'))]"/>
+    </record>
 </odoo>

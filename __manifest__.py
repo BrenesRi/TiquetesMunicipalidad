@@ -21,7 +21,7 @@
     'website': "https://www.coromuni.go.cr",
     'category': 'P.D.I.',
     'data': [
-        #'security/groups.xml',
+        'security/groups.xml',
         'security/ir.model.access.csv',
 
         'views/tiquetes_general_views.xml',
