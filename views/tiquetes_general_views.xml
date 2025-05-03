@@ -6,18 +6,25 @@
             <field name="model">pdi.tiquete</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="nombre" string="Título"/>
-                    <field name="description" string="Descripción"/>
-                    <field name="state" string="Estado"/>
-                    <field name="create_user_id" string="Reportado por"/>
-                    <field name="resolver_id" string="Resuelto por"/>
-                    <field name="fecha_creacion" string="Fecha de Creación"/>
-                    <field name="fecha_prevista" string="Fecha Prevista"/>
-                    <field name="fecha_cierre" string="Fecha de Cierre"/>
-                    <filter name="filter_abiertos" string="Abiertos" domain="[( 'state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
-                    <filter name="filter_cerrados" string="Cerrados" domain="[( 'state', 'in', ['solucionado', 'cerrado'])]"/>
-                    <filter name="filter_cancelados" string="Cancelados" domain="[( 'state', '=', 'cancelado')]"/>
-                </search>
+                <field name="nombre" string="Título"/>
+                <field name="description" string="Descripción"/>
+                <field name="state" string="Estado"/>
+
+    <!-- Soporte y Admin -->
+    <field name="create_user_id" string="Reportado por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
+    <field name="resolver_id" string="Resuelto por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
+
+    <field name="fecha_creacion" string="Fecha de Creación"/>
+    <field name="fecha_prevista" string="Fecha Prevista"/>
+    <field name="fecha_cierre" string="Fecha de Cierre"/>
+
+    <filter name="filter_abiertos" string="Abiertos"
+            domain="[('state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
+    <filter name="filter_cerrados" string="Cerrados"
+            domain="[('state', 'in', ['solucionado', 'cerrado'])]"/>
+    <filter name="filter_cancelados" string="Cancelados"
+            domain="[('state', '=', 'cancelado')]"/>
+        </search>
             </field>
         </record>
 
