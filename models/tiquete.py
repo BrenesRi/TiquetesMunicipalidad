@@ -112,21 +112,27 @@ class Tiquete(models.Model):
             record.write({'state': 'abierto'})        
 
     def button_revision(self):
+        if not (self.env.user.has_group('grupo_soporte') or self.env.user.has_group('grupo_admin')):
+            raise exceptions.UserError("Solo el personal de soporte puede poner un tiquete en revisión.")
         for record in self:
             if record.state not in ['abierto']:
-                raise exceptions.UserError("Para poner un tiquete en revisión, debe estar Registrado o Abierto.")
+                raise exceptions.UserError("Para poner un tiquete en revisión, debe estar Abierto.")
             record.write({'state': 'en_revision'})
 
     def button_atencion(self):
+        if not (self.env.user.has_group('grupo_soporte') or self.env.user.has_group('grupo_admin')):
+            raise exceptions.UserError("Solo el personal de soporte puede poner un tiquete en atención.")
         for record in self:
             if record.state not in ['en_revision']:
                 raise exceptions.UserError("Para poner un tiquete en atención, debe haber sido revisado.")
             record.write({'state': 'en_atencion'})
 
     def button_solucionado(self):
+        if not (self.env.user.has_group('grupo_soporte') or self.env.user.has_group('grupo_admin')):
+            raise exceptions.UserError("Solo el personal de soporte puede marcar un tiquete como solucionado.")
         for record in self:
             if record.state not in ['en_atencion']:
-                raise exceptions.UserError("Para poner dar por solucionado un tiquete, debe haber estado en atención.")
+                raise exceptions.UserError("Para dar por solucionado un tiquete, debe haber estado en atención.")
             record.write({'state': 'solucionado'})
 
     def button_cerrado(self):

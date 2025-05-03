@@ -23,6 +23,7 @@
     'data': [
         'security/groups.xml',
         'security/ir.model.access.csv',
+        'security/tiquete_security.xml',
 
         'views/tiquetes_general_views.xml',
         'views/tiquete_solucion_views.xml',

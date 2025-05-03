@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+        <!-- Usuarios solo ven sus tiquetes -->
+        <record id="tiquete_usuario_own_rule" model="ir.rule">
+            <field name="name">Tiquetes propios (usuario)</field>
+            <field name="model_id" ref="model_pdi_tiquete"/>
+            <field name="domain_force">[('create_user_id', '=', user.id)]</field>
+            <field name="groups" eval="[(4, ref('grupo_usuario'))]"/>
+            <field name="perm_read" eval="True"/>
+            <field name="perm_write" eval="True"/>
+            <field name="perm_create" eval="True"/>
+            <field name="perm_unlink" eval="False"/>
+        </record>
+
+            <!-- Soporte ve todos -->
+    <record id="tiquete_soporte_all_rule" model="ir.rule">
+        <field name="name">Tiquetes (soporte)</field>
+        <field name="model_id" ref="model_pdi_tiquete"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('grupo_soporte'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+
+    <!-- Administrador ve todos -->
+    <record id="tiquete_admin_all_rule" model="ir.rule">
+        <field name="name">Tiquetes (admin)</field>
+        <field name="model_id" ref="model_pdi_tiquete"/>
+        <field name="domain_force">[(1, '=', 1)]</field>
+        <field name="groups" eval="[(4, ref('grupo_admin'))]"/>
+        <field name="perm_read" eval="True"/>
+        <field name="perm_write" eval="True"/>
+        <field name="perm_create" eval="True"/>
+        <field name="perm_unlink" eval="True"/>
+    </record>
+</odoo>
