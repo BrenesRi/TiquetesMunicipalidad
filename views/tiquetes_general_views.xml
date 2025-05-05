@@ -28,6 +28,9 @@
             </field>
         </record>
 
+
+
+
         <!-- Form View -->
 <record id="pdi_tiquete_form_minimal" model="ir.ui.view">
     <field name="name">pdi.tiquete.form.minimal</field>
@@ -53,8 +56,6 @@
        widget="statusbar"
        options="{'clickable': 0}"
        attrs="{'invisible': [('is_support_or_admin', '=', True)]}"/>
-
-
         </header>
             <sheet>
                 <h1>
@@ -114,6 +115,8 @@
 </record>
 
 
+
+
     <!-- Tree View -->
 <record id="pdi_tiquete_view_tree" model="ir.ui.view">
     <field name="name">pdi.tiquete.tree</field>
@@ -132,6 +135,39 @@
 </record>
 
         
+        <!-- Kanban View -->
+        <record id="pdi_tiquete_view_kanban" model="ir.ui.view">
+    <field name="name">pdi.tiquete.kanban</field>
+    <field name="model">pdi.tiquete</field>
+    <field name="arch" type="xml">
+        <kanban class="o_kanban_tiquete" default_group_by="state" group_create="false">
+            <templates>
+                <t t-name="kanban-box">
+                    <div class="oe_kanban_global_click">
+                        <div class="o_kanban_record_top">
+                            <strong><field name="nombre"/></strong>
+                        </div>
+                        <div>
+                            <field name="description"/>
+                        </div>
+                        <div>
+                            <field name="prioridad" widget="badge"/>
+                        </div>
+                        <div>
+                            <field name="create_user_id"/>
+                        </div>
+                        <div>
+                            <small>📅 <field name="fecha_creacion"/></small>
+                        </div>
+                    </div>
+                </t>
+            </templates>
+        </kanban>
+    </field>
+</record>
+
+
+
         <!-- Action for Tree View -->
         <record id="action_tiquete_tree" model="ir.actions.act_window">
             <field name="name">Lista de Tiquetes</field>
@@ -146,6 +182,15 @@
             <field name="view_mode">form</field>
         </record>
         
+        <!-- Action for Kanban View -->
+        <record id="action_tiquete_kanban" model="ir.actions.act_window">
+            <field name="name">Tiquetes por Estado</field>
+            <field name="res_model">pdi.tiquete</field>
+            <field name="view_mode">kanban,tree,form</field>
+            <field name="context">{'default_state': 'registrado'}</field>
+        </record>
+
+
         <!-- Parent Menu -->
         <menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5"/>
         
@@ -154,5 +199,12 @@
         
         <!-- Submenu for all Ticket Tree -->
         <menuitem id="menu_tiquete_tree" name="Todos los tiquetes" parent="menu_tiquete_estados" action="action_tiquete_tree"/>
+
+        <!-- Submenu for Ticket Kanban -->
+        <menuitem id="menu_tiquete_kanban" name="Vista de tiquetes por estado"
+          parent="menu_tiquete_estados"
+          action="action_tiquete_kanban"
+          sequence="15"/>
+
     </data>
 </odoo>
