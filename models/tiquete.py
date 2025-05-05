@@ -58,6 +58,9 @@ class Tiquete(models.Model):
     ('critica', '🔥 Crítica'),
     ], string="Prioridad", default='por_definir', tracking=True)
 
+    #Validaciones de roles
+    is_support_or_admin = fields.Boolean(compute='_compute_is_support_or_admin', store=False)
+
     #Validaciones
     _sql_constraints = [
     ('unique_nombre', 'UNIQUE(nombre)', 'El título del tiquete debe ser único.'),
@@ -67,6 +70,23 @@ class Tiquete(models.Model):
     'El estado del tiquete debe ser válido.'),
     ]
     
+    @api.depends_context('uid')
+    def _compute_is_support_or_admin(self):
+        current_user = self.env.user
+        is_admin_or_support = (
+            current_user.has_group('Tiquetes.grupo_soporte') or
+            current_user.has_group('Tiquetes.grupo_admin')
+        )
+        for record in self:
+            record.is_support_or_admin = is_admin_or_support
+
+    @api.model
+    def default_get(self, fields):
+        res = super(Tiquete, self).default_get(fields)
+        user = self.env.user
+        res['is_support_or_admin'] = user.has_group('Tiquetes.grupo_soporte') or user.has_group('Tiquetes.grupo_admin')
+        return res
+
     @api.depends('fecha_creacion', 'fecha_prevista')
     def _compute_duracion_prevista(self):
         for record in self:

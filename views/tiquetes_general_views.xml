@@ -39,9 +39,22 @@
             <!--<button name="button_revision" type="object" string="Enviar a Revisión" states="registrado,abierto" class="oe_highlight"/> -->
             <!--<button name="button_atencion" type="object" string="Poner en Atención" states="en_revision" class="oe_highlight"/> -->
             <button name="button_cerrado" type="object" string="Cerrar Tiquete" states="solucionado" class="oe_highlight"/>
-            <button name="button_cancelar" type="object" string="Cancelar Tiquete (Ya no tengo el problema)" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}"/>    
+            <button name="button_cancelar" type="object" string="Cancelar Tiquete (Ya no tengo el problema)" states="registrado,abierto" class="oe_highlight" attrs="{'invisible': [('state', 'not in', ['registrado', 'abierto'])]}" />    
             <button name="button_reabrir" type="object" string="Reabrir Tiquete" states="cerrado, cancelado" class="oe_highlight"/>
-            <field name="state" widget="statusbar" options="{'clickable': 1}"/>
+            <!-- Statusbar editable solo para soporte y administrador -->
+<field name="is_support_or_admin" invisible="1"/>
+<field name="state"
+       widget="statusbar"
+       options="{'clickable': 1}"
+       attrs="{'invisible': [('is_support_or_admin', '=', False)]}"/>
+
+<!-- Campo para usuario: solo visible -->
+<field name="state"
+       widget="statusbar"
+       options="{'clickable': 0}"
+       attrs="{'invisible': [('is_support_or_admin', '=', True)]}"/>
+
+
         </header>
             <sheet>
                 <h1>
@@ -64,7 +77,7 @@
                     </group>
                 </group>
             <notebook>
-    <page string="Priorización del tiquete" attrs="{'invisible': [('state', '!=', 'en_revision')]}">
+    <page string="Priorización del tiquete" attrs="{'invisible': [('state', '!=', 'en_revision')]}" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin">
         <group>
             <separator string="Establecer prioridad del tiquete" colspan="2"/>
             <field name="prioridad"/>
@@ -84,7 +97,7 @@
             <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cerrado'])]}">
         <group>
             <separator string="Información del tiquete solucionado" colspan="2"/>
-            <field name="resolver_id" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
+            <field name="resolver_id" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
             <field name="fecha_cierre" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
             <field name="duracion_real" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" />
             <field name="state" invisible="1"/>
