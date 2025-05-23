@@ -77,23 +77,38 @@ class Tiquete(models.Model):
         return record
     
     def _send_notification_email(self):
-        admin_group = self.env.ref('Tiquetes.grupo_admin')
-        support_group = self.env.ref('Tiquetes.grupo_soporte')
-        users = admin_group.users | support_group.users
+        admin_group = self.env.ref('Tiquetes.grupo_admin', raise_if_not_found=False)
+        support_group = self.env.ref('Tiquetes.grupo_soporte', raise_if_not_found=False)
+        users = (admin_group.users if admin_group else self.env['res.users']) | \
+                (support_group.users if support_group else self.env['res.users'])
 
         if users:
-            partner_ids = users.mapped('partner_id.id') 
-            channel = self.env['mail.channel'].sudo().create({
-                'channel_partner_ids': [(4, pid) for pid in partner_ids],
-                'channel_type': 'chat',
-                'name': f"Notificación: Nuevo Tiquete {self.nombre}",
-            })
+            partner_ids = [pid for pid in users.mapped('partner_id.id') if pid]
+
+            channel = self.env['mail.channel'].sudo().search([
+                ('channel_type', '=', 'chat'),
+                ('name', '=', 'Notificaciones Tiquetes')
+            ], limit=1)
+
+            if not channel:
+                channel = self.env['mail.channel'].sudo().create({
+                    'channel_partner_ids': [(4, pid) for pid in partner_ids],
+                    'channel_type': 'chat',
+                    'name': 'Notificaciones Tiquetes',
+                })
+            else:
+                # Aseguramos que estén todos los usuarios
+                channel.sudo().write({
+                    'channel_partner_ids': [(4, pid) for pid in partner_ids]
+                })
+
+            # 🚨 Este es el paso que te falta ahora:
             channel.message_post(
                 body=f"Hola, se ha creado un nuevo tiquete: <b>{self.nombre}</b>. Por favor, revísalo.",
                 subtype_xmlid="mail.mt_comment",
                 message_type='comment',
             )
-
+   
     @api.depends_context('uid')
     def _compute_is_support_or_admin(self):
         current_user = self.env.user
