@@ -1,0 +1,23 @@
+<odoo>
+    <data noupdate="1">
+        <record id="email_template_new_tiquete" model="mail.template">
+            <field name="name">Notificación de Nuevo Tiquete</field>
+            <field name="model_id" ref="model_pdi_tiquete"/>
+            <field name="subject">Nuevo Tiquete: ${object.nombre}</field>
+            <field name="email_from">${(user.email or 'noreply@example.com')|safe}</field>
+            <field name="email_to">${','.join(object.env.ref('Tiquetes.grupo_admin').users.mapped('email') + object.env.ref('Tiquetes.grupo_soporte').users.mapped('email'))}</field>
+            <field name="body_html">
+                <![CDATA[
+                <p>Hola,</p>
+                <p>Se ha creado un nuevo tiquete:</p>
+                <ul>
+                    <li><strong>Título:</strong> ${object.nombre}</li>
+                    <li><strong>Descripción:</strong> ${object.description}</li>
+                    <li><strong>Creado por:</strong> ${object.create_user_id.name}</li>
+                </ul>
+                <p>Por favor, revisa el sistema para más detalles.</p>
+                ]]>
+            </field>
+        </record>
+    </data>
+</odoo>

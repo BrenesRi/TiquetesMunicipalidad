@@ -166,6 +166,16 @@
     </field>
 </record>
 
+<record id="view_tiquete_pie_chart" model="ir.ui.view">
+        <field name="name">tiquete.pie.chart</field>
+        <field name="model">pdi.tiquete</field>
+        <field name="arch" type="xml">
+            <graph string="Distribución de Tiquetes" type="pie">
+                <field name="state" type="row"/>
+                <field name="id" type="measure"/>
+            </graph>
+        </field>
+    </record>
 
 
         <!-- Action for Tree View -->
@@ -190,21 +200,36 @@
             <field name="context">{'default_state': 'registrado'}</field>
         </record>
 
+        <record id="action_tiquete_pie_chart" model="ir.actions.act_window">
+        <field name="name">Gráfico de Tiquetes</field>
+        <field name="res_model">pdi.tiquete</field>
+        <field name="view_mode">graph</field>
+        <field name="view_id" ref="view_tiquete_pie_chart"/>
+        </record>
 
-        <!-- Parent Menu -->
-        <menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5"/>
-        
-        <!-- Submenu for Tickets -->
-        <menuitem id="menu_tiquete_estados" name="Tiquetes" sequence="10" parent="menu_tiquetes" action="action_tiquete_tree"/>
-        
-        <!-- Submenu for all Ticket Tree -->
-        <menuitem id="menu_tiquete_tree" name="Todos los tiquetes" parent="menu_tiquete_estados" action="action_tiquete_tree"/>
 
-        <!-- Submenu for Ticket Kanban -->
-        <menuitem id="menu_tiquete_kanban" name="Vista de tiquetes por estado"
-          parent="menu_tiquete_estados"
+        <!-- Menú principal -->
+<menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5" action="action_tiquete_tree"/>
+
+<!-- Vista Kanban por estado -->
+<menuitem id="menu_tiquete_kanban"
+          name="Tiquetes por Estado"
+          parent="menu_tiquetes"
           action="action_tiquete_kanban"
+          groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"
           sequence="15"/>
+
+<!-- Todos los tiquetes (vista árbol) -->
+<menuitem id="menu_tiquete_tree"
+          name="Todos los Tiquetes"
+          parent="menu_tiquetes"
+          action="action_tiquete_tree"
+          sequence="10"/>
+
+<menuitem id="menu_tiquete_pie_chart"
+              name="Gráfico de Tiquetes"
+              parent="menu_tiquetes"
+              action="action_tiquete_pie_chart"/>
 
     </data>
 </odoo>

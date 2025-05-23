@@ -70,6 +70,30 @@ class Tiquete(models.Model):
     'El estado del tiquete debe ser válido.'),
     ]
     
+    @api.model
+    def create(self, vals):
+        record = super(Tiquete, self).create(vals)
+        record._send_notification_email()
+        return record
+    
+    def _send_notification_email(self):
+        admin_group = self.env.ref('Tiquetes.grupo_admin')
+        support_group = self.env.ref('Tiquetes.grupo_soporte')
+        users = admin_group.users | support_group.users
+
+        if users:
+            partner_ids = users.mapped('partner_id.id') 
+            channel = self.env['mail.channel'].sudo().create({
+                'channel_partner_ids': [(4, pid) for pid in partner_ids],
+                'channel_type': 'chat',
+                'name': f"Notificación: Nuevo Tiquete {self.nombre}",
+            })
+            channel.message_post(
+                body=f"Hola, se ha creado un nuevo tiquete: <b>{self.nombre}</b>. Por favor, revísalo.",
+                subtype_xmlid="mail.mt_comment",
+                message_type='comment',
+            )
+
     @api.depends_context('uid')
     def _compute_is_support_or_admin(self):
         current_user = self.env.user

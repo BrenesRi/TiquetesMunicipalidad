@@ -27,5 +27,7 @@
 
         'views/tiquetes_general_views.xml',
         'views/tiquete_solucion_views.xml',
+
+        'data/email_templates.xml',
     ]
 }
