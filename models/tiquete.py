@@ -97,17 +97,26 @@ class Tiquete(models.Model):
                     'name': 'Notificaciones Tiquetes',
                 })
             else:
-                # Aseguramos que estén todos los usuarios
                 channel.sudo().write({
                     'channel_partner_ids': [(4, pid) for pid in partner_ids]
                 })
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            tiquete_url = f"{base_url}/web#id={self.id}&model=pdi.tiquete&view_type=form"
 
-            # 🚨 Este es el paso que te falta ahora:
+            message_body = f"""
+            <p><strong>🆕 Nuevo Tiquete Registrado</strong></p>
+            <p><strong>Título:</strong> {self.nombre}</p>
+            <p><strong>Descripción:</strong><br>{self.description or 'Sin descripción'}</p>
+            <p><strong>Prioridad:</strong> {dict(self._fields['prioridad'].selection).get(self.prioridad, 'No definida')}</p>
+            <p><strong>Reportado por:</strong> {self.create_user_id.name}</p>
+            <p><a href="{tiquete_url}" target="_blank" style="padding: 6px 12px; background-color: #1f7ed3; color: white; text-decoration: none; border-radius: 4px;">📎 Ver Tiquete en Odoo</a></p>
+            """
+
             channel.message_post(
-                body=f"Hola, se ha creado un nuevo tiquete: <b>{self.nombre}</b>. Por favor, revísalo.",
+                body=message_body,
                 subtype_xmlid="mail.mt_comment",
                 message_type='comment',
-            )
+            )   
    
     @api.depends_context('uid')
     def _compute_is_support_or_admin(self):
