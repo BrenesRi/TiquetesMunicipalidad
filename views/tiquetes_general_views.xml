@@ -95,7 +95,7 @@
                 </tree>
               </field>
             </page>
-            <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cerrado'])]}">
+            <page string="Información de Cierre" attrs="{'invisible': [('state', 'not in', ['solucionado', 'cerrado'])]}" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin">
         <group>
             <separator string="Información del tiquete solucionado" colspan="2"/>
             <field name="resolver_id" attrs="{'readonly': [('state', 'in', ['cerrado', 'cancelado'])]}" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
