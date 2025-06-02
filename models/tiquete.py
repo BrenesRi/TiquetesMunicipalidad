@@ -159,12 +159,62 @@ class Tiquete(models.Model):
         else:
             self.duracion_real = 0.0
 
-
     @api.constrains('duracion_prevista')
     def _check_duracion_prevista(self):
         for record in self:
             if record.duracion_prevista < -1:
                 raise exceptions.ValidationError("La duración prevista debe ser un número positivo.")
+            
+    def _notificar_cambio_estado_usuario(self, nuevo_estado):
+        for record in self:
+            partner = record.create_user_id.partner_id
+            if not partner:
+                continue  # No hay a quién notificar
+
+            estado_emoji = dict(self._fields['state'].selection).get(nuevo_estado, nuevo_estado)
+
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            tiquete_url = f"{base_url}/web#id={record.id}&model=pdi.tiquete&view_type=form"
+
+            message_body = f"""
+            <p><strong>🔔 Cambio de estado del tiquete</strong></p>
+            <p>El tiquete <strong>{record.nombre}</strong> ha cambiado su estado a <strong>{estado_emoji}</strong>.</p>
+            <p><a href="{tiquete_url}" target="_blank" style="padding: 6px 12px; background-color: #1f7ed3; color: white; text-decoration: none; border-radius: 4px;">📎 Ver Tiquete en Odoo</a></p>
+            """
+
+            # Buscar o crear un canal privado 1:1 con el partner
+            channel = self.env['mail.channel'].sudo().search([
+                ('channel_type', '=', 'chat'),
+                ('channel_partner_ids', 'in', [partner.id]),
+                ('channel_partner_ids', 'in', [self.env.user.partner_id.id]),
+                ('name', '=', f'{partner.name} - Notificación Tiquete')
+            ], limit=1)
+
+            if not channel:
+                channel = self.env['mail.channel'].sudo().create({
+                    'channel_partner_ids': [(4, partner.id), (4, self.env.user.partner_id.id)],
+                    'channel_type': 'chat',
+                    'name': f'{partner.name} - Notificación Tiquete',
+                })
+
+            # Enviar mensaje
+            channel.message_post(
+                body=message_body,
+                subtype_xmlid="mail.mt_comment",
+                message_type='comment',
+            )
+
+    def write(self, vals):
+        estado_anterior = {rec.id: rec.state for rec in self}
+        result = super().write(vals)
+
+        if 'state' in vals:
+            for record in self:
+                estado_viejo = estado_anterior.get(record.id)
+                estado_nuevo = vals.get('state')
+                if estado_viejo != estado_nuevo and estado_nuevo in ['en_atencion', 'solucionado', 'cerrado']:
+                    record._notificar_cambio_estado_usuario(estado_nuevo)
+        return result
     
     #Botones para cambiar el tiquete de estado
     def button_cancelar(self):
