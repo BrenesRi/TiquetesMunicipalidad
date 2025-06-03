@@ -1,5 +1,6 @@
 from odoo import models, fields, api, exceptions
 from odoo.tools.float_utils import float_compare, float_is_zero
+from datetime import datetime
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -60,6 +61,12 @@ class Tiquete(models.Model):
 
     #Validaciones de roles
     is_support_or_admin = fields.Boolean(compute='_compute_is_support_or_admin', store=False)
+
+    es_del_mes_actual = fields.Boolean(
+        string="¿Del mes actual?",
+        compute="_compute_es_del_mes_actual",
+        store=True
+    )
 
     #Validaciones
     _sql_constraints = [
@@ -127,6 +134,16 @@ class Tiquete(models.Model):
         )
         for record in self:
             record.is_support_or_admin = is_admin_or_support
+
+    @api.depends('fecha_creacion')
+    def _compute_es_del_mes_actual(self):
+        hoy = fields.Date.context_today(self)
+        for record in self:
+            if record.fecha_creacion:
+                fecha = record.fecha_creacion.date()
+                record.es_del_mes_actual = (fecha.month == hoy.month and fecha.year == hoy.year)
+            else:
+                record.es_del_mes_actual = False        
 
     @api.model
     def default_get(self, fields):
