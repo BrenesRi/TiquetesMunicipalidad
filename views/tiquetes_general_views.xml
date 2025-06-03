@@ -193,21 +193,6 @@
     </field>
 </record>
 
-
-        <!-- Vista Graph (barra) -->
-        <record id="view_graph_tiquete" model="ir.ui.view">
-            <field name="name">pdi.tiquete.graph</field>
-            <field name="model">pdi.tiquete</field>
-            <field name="arch" type="xml">
-                <graph string="Gráfica de Tiquetes por Estado" type="bar">
-                    <field name="fecha_creacion" type="row" interval="month"/>
-                    <field name="state" type="col"/>
-                    <field name="id" type="measure"/>
-                </graph>
-            </field>
-        </record>
-
-
         <!-- Action for Tree View -->
         <record id="action_tiquete_tree" model="ir.actions.act_window">
             <field name="name">Lista de Tiquetes</field>
@@ -244,13 +229,6 @@
             <field name="view_id" ref="view_pivot_tiquete"/>
         </record>
 
-        <record id="action_tiquete_bar_chart" model="ir.actions.act_window">
-            <field name="name">Gráfica de Barras</field>
-            <field name="res_model">pdi.tiquete</field>
-            <field name="view_mode">graph</field>
-            <field name="view_id" ref="view_graph_tiquete"/>
-        </record>
-
         <!-- Menú principal -->
 <menuitem id="menu_tiquetes" name="Gestión de Tiquetes" sequence="5" action="action_tiquete_tree"/>
 
@@ -272,12 +250,8 @@
 <menuitem id="menu_tiquete_pie_chart" name="Gráfico de Tiquetes"
                   parent="menu_tiquetes" action="action_tiquete_pie_chart"/>
 
-        <menuitem id="menu_tiquete_pivot" name="Análisis (Pivot)"
+        <menuitem id="menu_tiquete_pivot" name="Análisis de Datos (Pivot)"
                   parent="menu_tiquetes" action="action_tiquete_pivot"
-                  groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
-
-        <menuitem id="menu_tiquete_bar_chart" name="Gráfica de Barras"
-                  parent="menu_tiquetes" action="action_tiquete_bar_chart"
                   groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
 
     </data>

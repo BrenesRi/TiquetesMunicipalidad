@@ -163,8 +163,11 @@ class Tiquete(models.Model):
 
     @api.onchange('fecha_prevista')
     def _onchange_fecha_prevista(self):
-        if self.fecha_creacion and self.fecha_prevista and self.fecha_prevista < self.fecha_creacion.date():
-            raise exceptions.ValidationError("La fecha prevista no puede ser anterior a la fecha de creación.")
+        if self.fecha_creacion and self.fecha_prevista:
+            fecha_creacion_solo_fecha = self.fecha_creacion.date()
+            if self.fecha_prevista < fecha_creacion_solo_fecha:
+                raise exceptions.ValidationError("La fecha prevista no puede ser anterior a la fecha de creación.")
+
 
     @api.onchange('fecha_cierre')
     def _onchange_fecha_cierre(self):
