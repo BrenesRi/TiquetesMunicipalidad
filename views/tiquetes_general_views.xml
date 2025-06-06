@@ -26,13 +26,6 @@
                     domain="[('state', '=', 'cancelado')]"/>
             <filter string="Este mes" name="este_mes" domain="[('es_del_mes_actual', '=', True)]"/>
             <filter name="alta_prioridad" string="Alta o más" domain="[('prioridad','in',['alta','critica'])]"/>
-
-            <group expand="0" string="Ordenar por">
-                <filter name="prioridad_asc" string="Prioridad ↑" context="{'order': 'prioridad asc'}"/>
-                <filter name="prioridad_desc" string="Prioridad ↓" context="{'order': 'prioridad desc'}"/>
-                <filter name="fecha_prevista_asc" string="Fecha Prevista ↑" context="{'order': 'fecha_prevista asc'}"/>
-                <filter name="fecha_prevista_desc" string="Fecha Prevista ↓" context="{'order': 'fecha_prevista desc'}"/>
-            </group>
         </search>
     </field>
 </record>
@@ -122,12 +115,12 @@
 </record>
 
 
-    <!-- Tree View -->
+ <!-- Tree View -->
 <record id="pdi_tiquete_view_tree" model="ir.ui.view">
     <field name="name">pdi.tiquete.tree</field>
     <field name="model">pdi.tiquete</field>
     <field name="arch" type="xml">
-        <tree string="Tiquetes de Soporte">
+        <tree string="Tiquetes de Soporte" default_order="prioridad desc">
             <field name="nombre"/>
             <field name="description"/>
             <field name="create_user_id"/>
@@ -176,7 +169,7 @@
             <field name="model">pdi.tiquete</field>
             <field name="arch" type="xml">
                 <graph string="Distribución de Tiquetes" type="pie">
-                    <field name="state" type="row"/>
+                    <field name="prioridad" type="row"/>
                     <field name="id" type="measure"/>
                 </graph>
             </field>
