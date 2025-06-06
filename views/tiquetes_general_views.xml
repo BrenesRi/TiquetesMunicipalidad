@@ -2,34 +2,41 @@
     <data>
 
         <!-- Search View -->
-        <record id="view_search_tiquete" model="ir.ui.view">
-            <field name="name">pdi.tiquete.search</field>
-            <field name="model">pdi.tiquete</field>
-            <field name="arch" type="xml">
-                <search>
-                    <field name="nombre" string="Título"/>
-                    <field name="description" string="Descripción"/>
-                    <field name="state" string="Estado"/>
+<record id="view_search_tiquete" model="ir.ui.view">
+    <field name="name">pdi.tiquete.search</field>
+    <field name="model">pdi.tiquete</field>
+    <field name="arch" type="xml">
+        <search>
+            <field name="nombre" string="Título"/>
+            <field name="description" string="Descripción"/>
+            <field name="state" string="Estado"/>
 
-                    <field name="create_user_id" string="Reportado por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
-                    <field name="resolver_id" string="Resuelto por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
+            <field name="create_user_id" string="Reportado por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
+            <field name="resolver_id" string="Resuelto por" groups="Tiquetes.grupo_soporte,Tiquetes.grupo_admin"/>
 
-                    <field name="fecha_creacion" string="Fecha de Creación"/>
-                    <field name="fecha_prevista" string="Fecha Prevista"/>
-                    <field name="fecha_cierre" string="Fecha de Cierre"/>
+            <field name="fecha_creacion" string="Fecha de Creación"/>
+            <field name="fecha_prevista" string="Fecha Prevista"/>
+            <field name="fecha_cierre" string="Fecha de Cierre"/>
 
-                    <filter name="filter_abiertos" string="Abiertos"
-                            domain="[('state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
-                    <filter name="filter_cerrados" string="Cerrados"
-                            domain="[('state', 'in', ['solucionado', 'cerrado'])]"/>
-                    <filter name="filter_cancelados" string="Cancelados"
-                            domain="[('state', '=', 'cancelado')]"/>
-                    <filter string="Este mes" name="este_mes" domain="[('es_del_mes_actual', '=', True)]"/>
-                    <filter name="alta_prioridad" string="Alta o más" domain="[('prioridad','in',['alta','critica'])]"/>
-                </search>
-            </field>
-        </record>
-     
+            <filter name="filter_abiertos" string="Abiertos"
+                    domain="[('state', 'in', ['registrado', 'abierto', 'en_revision', 'en_atencion'])]"/>
+            <filter name="filter_cerrados" string="Cerrados"
+                    domain="[('state', 'in', ['solucionado', 'cerrado'])]"/>
+            <filter name="filter_cancelados" string="Cancelados"
+                    domain="[('state', '=', 'cancelado')]"/>
+            <filter string="Este mes" name="este_mes" domain="[('es_del_mes_actual', '=', True)]"/>
+            <filter name="alta_prioridad" string="Alta o más" domain="[('prioridad','in',['alta','critica'])]"/>
+
+            <group expand="0" string="Ordenar por">
+                <filter name="prioridad_asc" string="Prioridad ↑" context="{'order': 'prioridad asc'}"/>
+                <filter name="prioridad_desc" string="Prioridad ↓" context="{'order': 'prioridad desc'}"/>
+                <filter name="fecha_prevista_asc" string="Fecha Prevista ↑" context="{'order': 'fecha_prevista asc'}"/>
+                <filter name="fecha_prevista_desc" string="Fecha Prevista ↓" context="{'order': 'fecha_prevista desc'}"/>
+            </group>
+        </search>
+    </field>
+</record>
+
 
         <!-- Form View -->
 <record id="pdi_tiquete_form_minimal" model="ir.ui.view">

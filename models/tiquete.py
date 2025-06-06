@@ -123,7 +123,18 @@ class Tiquete(models.Model):
                 body=message_body,
                 subtype_xmlid="mail.mt_comment",
                 message_type='comment',
-            )   
+            )
+
+            #if partner_ids:
+                #self.message_post(
+                    #body=message_body,
+                    #subject=f"🆕 Nuevo Tiquete: {self.nombre}",
+                    #partner_ids=partner_ids,
+                    #message_type='comment',
+                    #subtype_xmlid="mail.mt_comment",
+                    #email_from=self.env.user.email or 'soporte@municoro.com',
+                    #notify_by_email=True,
+                #)
    
     @api.depends_context('uid')
     def _compute_is_support_or_admin(self):
@@ -188,7 +199,7 @@ class Tiquete(models.Model):
         for record in self:
             partner = record.create_user_id.partner_id
             if not partner:
-                continue  # No hay a quién notificar
+                continue
 
             estado_emoji = dict(self._fields['state'].selection).get(nuevo_estado, nuevo_estado)
 
@@ -201,7 +212,6 @@ class Tiquete(models.Model):
             <p><a href="{tiquete_url}" target="_blank" style="padding: 6px 12px; background-color: #1f7ed3; color: white; text-decoration: none; border-radius: 4px;">📎 Ver Tiquete en Odoo</a></p>
             """
 
-            # Buscar o crear un canal privado 1:1 con el partner
             channel = self.env['mail.channel'].sudo().search([
                 ('channel_type', '=', 'chat'),
                 ('channel_partner_ids', 'in', [partner.id]),
@@ -216,7 +226,6 @@ class Tiquete(models.Model):
                     'name': f'{partner.name} - Notificación Tiquete',
                 })
 
-            # Enviar mensaje
             channel.message_post(
                 body=message_body,
                 subtype_xmlid="mail.mt_comment",
