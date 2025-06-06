@@ -1,6 +1,6 @@
 from odoo import models, fields, api, exceptions
 from odoo.tools.float_utils import float_compare, float_is_zero
-from datetime import datetime
+from datetime import datetime, timedelta
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -164,18 +164,17 @@ class Tiquete(models.Model):
     @api.onchange('fecha_prevista')
     def _onchange_fecha_prevista(self):
         if self.fecha_creacion and self.fecha_prevista:
-            fecha_creacion_solo_fecha = self.fecha_creacion.date()
+            fecha_creacion_solo_fecha = fields.Date.to_date(self.fecha_creacion) - timedelta(days=1)
             if self.fecha_prevista < fecha_creacion_solo_fecha:
                 raise exceptions.ValidationError("La fecha prevista no puede ser anterior a la fecha de creación.")
-
-
+            
     @api.onchange('fecha_cierre')
     def _onchange_fecha_cierre(self):
         if self.fecha_creacion and self.fecha_cierre and self.fecha_cierre < self.fecha_creacion:
             raise exceptions.ValidationError("La fecha de cierre no puede ser anterior a la fecha de creación.")
         if self.fecha_creacion and self.fecha_cierre:
             delta = self.fecha_cierre.date() - self.fecha_creacion.date()
-            self.duracion_real = delta.days #A este no se le suma 1 porque ya se cuenta el día de creación
+            self.duracion_real = delta.days
         else:
             self.duracion_real = 0.0
 
